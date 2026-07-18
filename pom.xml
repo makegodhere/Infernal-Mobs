@@ -25,12 +25,12 @@
 
     <dependencies>
         <!-- Paper API 26.1.2 -->
-        <dependency>
-            <groupId>io.papermc.paper</groupId>
-            <artifactId>paper-api</artifactId>
-            <version>26.1.2</version>
-            <scope>provided</scope>
-        </dependency>
+         <dependency>
+             <groupId>io.papermc.paper</groupId>
+             <artifactId>paper-api</artifactId>
+             <version>26.1.2.build.+</version>
+             <scope>provided</scope>
+         </dependency>
 
         <!-- bStats -->
         <dependency>

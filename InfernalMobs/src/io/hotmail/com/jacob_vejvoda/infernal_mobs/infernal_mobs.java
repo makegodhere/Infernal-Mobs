@@ -841,6 +841,15 @@ public class infernal_mobs extends JavaPlugin implements Listener {
             	int ubl = lootFile.getInt("loot." + loot + ".unbreaking");
             	stack.addUnsafeEnchantment(Enchantment.UNBREAKING, ubl);
             }
+
+			if (lootFile.contains("loot." + loot + ".model")) {
+                ItemMeta finalMeta = stack.getItemMeta();
+                if (finalMeta != null) {
+                    finalMeta.setCustomModelData(lootFile.getInt("loot." + loot + ".model"));
+                    stack.setItemMeta(finalMeta);
+                }
+            }
+			
             return stack;
         } catch (Exception e) {
             this.getLogger().log(Level.SEVERE, e.getMessage(), true);

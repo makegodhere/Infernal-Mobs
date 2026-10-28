@@ -1257,6 +1257,35 @@ public class infernal_mobs extends JavaPlugin implements Listener {
             }
         }, 1L);
     }
+    /**
+     * Checks whether an actual item satisfies a loot.yml required-item entry.
+     * CustomModelData is only required when it is configured on the required item,
+     * preserving the old matching behavior for entries without a model.
+     */
+    public boolean matchesRequiredItem(ItemStack actual, ItemStack required) {
+        if (actual == null || required == null || actual.getType() != required.getType()) {
+            return false;
+        }
+
+        ItemMeta requiredMeta = required.getItemMeta();
+        if (requiredMeta == null) {
+            return true;
+        }
+
+        ItemMeta actualMeta = actual.getItemMeta();
+        if (actualMeta == null) {
+            return false;
+        }
+
+        if (!java.util.Objects.equals(actualMeta.getDisplayName(), requiredMeta.getDisplayName())) {
+            return false;
+        }
+
+        return !requiredMeta.hasCustomModelData()
+                || (actualMeta.hasCustomModelData()
+                && actualMeta.getCustomModelData() == requiredMeta.getCustomModelData());
+    }
+
     public void applyEffect() {
         //Check Players
         for (Player p : this.getServer().getOnlinePlayers()) {
@@ -1284,7 +1313,7 @@ public class infernal_mobs extends JavaPlugin implements Listener {
                                 for (Map.Entry<Integer, ItemStack> hm : itemMap.entrySet()) {
                                     ItemStack check = hm.getValue();
                                     try {
-                                        if ((neededItem.getItemMeta() == null) || (check.getItemMeta().getDisplayName().equals(neededItem.getItemMeta().getDisplayName()))) {
+                                        if (matchesRequiredItem(check, neededItem)) {
                                             if (check.getType().equals(neededItem.getType())) {
                                                 //if ((neededItem.getType().getMaxDurability() > 0) || ((Damageable)check).getDamage() == (((Damageable)neededItem).getDamage())) {
                                                     if (!isArmor(neededItem) || hm.getKey() >= 100)
@@ -1394,7 +1423,7 @@ fertileList.remove(p);
                         for (int neededItemIndex : lootFile.getIntegerList("potionEffects." + i + ".requiredItems")) {
                             ItemStack neededItem = getItem(neededItemIndex);
                             try {
-                                if ((neededItem.getItemMeta() == null) || (itemUsed.getItemMeta().getDisplayName().equals(neededItem.getItemMeta().getDisplayName()))) {
+                                if (matchesRequiredItem(itemUsed, neededItem)) {
                                     if (itemUsed.getType().equals(neededItem.getType())) {
                                         //if ((neededItem.getType().getMaxDurability() > 0) || (itemUsed.getDurability() == (neededItem.getDurability()))) {
                                             //Player Using Item
@@ -1418,7 +1447,7 @@ fertileList.remove(p);
                             ItemStack neededItem = getItem(neededItemIndex);
                             for (ItemStack check : items) {
                                 try {
-                                    if ((neededItem.getItemMeta() == null) || (check.getItemMeta().getDisplayName().equals(neededItem.getItemMeta().getDisplayName()))) {
+                                    if (matchesRequiredItem(check, neededItem)) {
                                         if (check.getType().equals(neededItem.getType())) {
                                             //if ((neededItem.getType().getMaxDurability() > 0) || (check.getDurability() == (neededItem.getDurability()))) {
                                                 if (!itemsPlayerHas.contains(neededItem)) {

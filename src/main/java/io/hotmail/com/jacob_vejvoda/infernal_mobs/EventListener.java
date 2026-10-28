@@ -149,7 +149,7 @@ public class EventListener implements Listener {
             for (String id : lootFile.getConfigurationSection("consumeEffects").getKeys(false))
                 if (lootFile.getString("consumeEffects." + id + ".requiredItem") != null) {
                 	ItemStack neededItem = plugin.getItem(lootFile.getInt("consumeEffects." + id + ".requiredItem"));
-                    if ((neededItem.getItemMeta() != null) && (check.getItemMeta().getDisplayName().equals(neededItem.getItemMeta().getDisplayName()))) 
+                    if ((neededItem.getItemMeta() != null) && plugin.matchesRequiredItem(check, neededItem)) 
                     	if (check.getType().equals(neededItem.getType()))
                     		plugin.applyEatEffects(p, Integer.parseInt(id));
                 }
